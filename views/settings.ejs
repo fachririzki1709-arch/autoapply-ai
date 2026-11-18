@@ -1,0 +1,230 @@
+<%- include('partials/head', { pageTitle: 'Pengaturan Sistem & Keamanan — AutoApply AI v3.0' }) %>
+
+<div class="min-h-screen flex flex-col lg:flex-row">
+  <%- include('partials/sidebar', { activePage: 'settings' }) %>
+
+  <div class="flex-1 flex flex-col min-w-0">
+    <%- include('partials/topbar', { profile }) %>
+
+    <main class="p-5 space-y-5 max-w-[1280px] w-full mx-auto">
+      <h2 class="text-[20px] font-bold text-[#EADCC8]">Pengaturan Preferensi Global, Scraper &amp; Keamanan Akun</h2>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- Profil & Preferensi Scraper -->
+        <div class="lg:col-span-8 rounded-2xl bento-card p-6">
+          <h3 class="text-[16px] font-semibold text-[#EADCC8] mb-4">Profil Kandidat &amp; Aturan Orkestrasi AI</h3>
+          <form id="profileSettingsForm" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">Nama Lengkap Sesuai CV</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  required
+                  value="<%= profile.fullName %>"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">Nomor Telepon / WhatsApp</label>
+                <input
+                  type="text"
+                  name="phone"
+                  required
+                  value="<%= profile.phone %>"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">URL Portofolio Web / GitHub</label>
+                <input
+                  type="url"
+                  name="portfolioUrl"
+                  value="<%= profile.portfolioUrl || '' %>"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">URL LinkedIn</label>
+                <input
+                  type="url"
+                  name="linkedinUrl"
+                  value="<%= profile.linkedinUrl || '' %>"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[12px] text-[#7FB3B8] mb-1">Kata Kunci Posisi Target (Pisahkan Koma)</label>
+              <input
+                type="text"
+                name="targetKeywords"
+                value="<%= (profile.targetKeywords || []).join(', ') %>"
+                class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+              />
+            </div>
+
+            <div>
+              <label class="block text-[12px] text-[#7FB3B8] mb-1">Kata Kunci Pengecualian / Blacklist (Pisahkan Koma)</label>
+              <input
+                type="text"
+                name="excludedKeywords"
+                value="<%= (profile.excludedKeywords || []).join(', ') %>"
+                class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+              />
+            </div>
+
+            <div>
+              <label class="block text-[12px] text-[#7FB3B8] mb-1">Lokasi Target (Pisahkan Koma)</label>
+              <input
+                type="text"
+                name="targetLocations"
+                value="<%= (profile.targetLocations || []).join(', ') %>"
+                class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+              />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">Skor Minimal AI (50-95)</label>
+                <input
+                  type="number"
+                  min="50"
+                  max="95"
+                  name="minMatchScore"
+                  value="<%= profile.minMatchScore || 75 %>"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] font-mono input-obsidian"
+                />
+              </div>
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">Cooldown Duplikasi (Hari)</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="180"
+                  name="duplicateCooldownDays"
+                  value="<%= profile.duplicateCooldownDays || 30 %>"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] font-mono input-obsidian"
+                />
+              </div>
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">Pengingat Follow-Up (Hari Kerja)</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="30"
+                  name="followUpReminderDays"
+                  value="<%= profile.followUpReminderDays || 7 %>"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] font-mono input-obsidian"
+                />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[12px] text-[#7FB3B8] mb-1">Tanda Tangan Email (Email Signature)</label>
+              <textarea
+                name="emailSignature"
+                rows="3"
+                class="w-full rounded-xl p-3 text-[13px] input-obsidian"
+              ><%= profile.emailSignature || '' %></textarea>
+            </div>
+
+            <button type="submit" class="px-5 py-2.5 rounded-xl btn-amber text-[13px]">
+              Simpan Konfigurasi Profil
+            </button>
+          </form>
+        </div>
+
+        <!-- Keamanan Pemilik & Status Cron -->
+        <div class="lg:col-span-4 space-y-5">
+          <div class="rounded-2xl bento-card p-6">
+            <h3 class="text-[16px] font-semibold text-[#EADCC8] mb-2">Status Penjadwal Cron</h3>
+            <p class="text-[12px] text-[#7FB3B8] mb-3">
+              Jadwal aktif: <span class="font-mono text-[#EADCC8]"><%= cronSchedule %> WIB</span>
+            </p>
+            <span class="px-3 py-1 rounded-full text-[11px] font-mono bg-[#2E6F73] text-[#EADCC8]">
+              <%= autoCronEnabled ? 'AKTIF (Asia/Jakarta)' : 'NONAKTIF' %>
+            </span>
+          </div>
+
+          <div class="rounded-2xl bento-card p-6">
+            <h3 class="text-[16px] font-semibold text-[#EADCC8] mb-1">Keamanan Akun Pemilik</h3>
+            <p class="text-[12px] font-mono text-[#7FB3B8] mb-4"><%= ownerEmail %></p>
+
+            <form id="changePasswordForm" class="space-y-3">
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">Kata Sandi Saat Ini</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  required
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">Kata Sandi Baru (Min. 8 Karakter)</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  minlength="8"
+                  required
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+              <div>
+                <label class="block text-[12px] text-[#7FB3B8] mb-1">Konfirmasi Kata Sandi Baru</label>
+                <input
+                  type="password"
+                  name="confirmNewPassword"
+                  minlength="8"
+                  required
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+              <button type="submit" class="w-full py-2.5 rounded-xl btn-lagoon text-[13px] font-semibold">
+                Perbarui Kata Sandi
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<%- include('partials/quick-capture-modal') %>
+<script src="/js/motion.js"></script>
+<script>
+  document.getElementById('profileSettingsForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const payload = Object.fromEntries(formData.entries());
+    const res = await fetch('/api/settings/profile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    window.showToast(data.message, data.success ? 'success' : 'error');
+  });
+
+  document.getElementById('changePasswordForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const payload = Object.fromEntries(formData.entries());
+    const res = await fetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    window.showToast(data.message, data.success ? 'success' : 'error');
+    if (data.success) e.target.reset();
+  });
+</script>
+</body>
+</html>

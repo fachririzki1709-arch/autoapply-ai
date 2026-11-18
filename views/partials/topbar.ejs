@@ -1,0 +1,57 @@
+<header
+  class="sticky top-0 z-30 bg-[#0A0F14]/85 backdrop-blur-md border-b border-[#7FB3B8]/15 px-5 py-3.5 flex flex-wrap items-center justify-between gap-4"
+>
+  <div class="flex items-center gap-3">
+    <div>
+      <h1 class="text-[16px] font-semibold text-[#EADCC8]">
+        Halo, <%= profile?.fullName || 'Pemilik Akun' %>
+      </h1>
+      <p class="text-[12px] text-[#7FB3B8]">
+        Single-Tenant Private Workspace • <span data-wib-date></span>
+      </p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3 flex-wrap">
+    <!-- Global Search -->
+    <div class="relative">
+      <input
+        id="globalSearchInput"
+        type="text"
+        placeholder="Cari posisi, perusahaan, email..."
+        class="w-56 sm:w-64 pl-3.5 pr-3 py-1.5 rounded-xl bg-[#0F3D3E]/80 border border-[#7FB3B8]/25 text-[12px] text-[#EADCC8] placeholder-[#7FB3B8]/50 focus:outline-none focus:border-[#C6601F]"
+      />
+    </div>
+
+    <!-- Quick Capture CTA -->
+    <button
+      type="button"
+      data-open-quick-capture
+      class="px-3.5 py-1.5 rounded-xl btn-lagoon text-[12px] font-semibold flex items-center gap-1.5"
+    >
+      <span>+ Input Cepat Loker</span>
+    </button>
+
+    <!-- Laporan / History Shortcut -->
+    <a
+      href="/history"
+      class="px-3 py-1.5 rounded-xl bg-[#0F3D3E]/80 border border-[#7FB3B8]/20 text-[12px] text-[#7FB3B8] hover:text-[#EADCC8]"
+    >
+      Laporan
+    </a>
+
+    <!-- Live WIB Badge -->
+    <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0F3D3E]/60 border border-[#7FB3B8]/20">
+      <span class="w-2 h-2 rounded-full bg-[#C6601F] animate-pulse"></span>
+      <span data-wib-time class="text-[11px] font-mono font-semibold text-[#EADCC8] tabular-nums">--:--:-- WIB</span>
+    </div>
+
+    <!-- Candidate Avatar -->
+    <div
+      class="w-9 h-9 rounded-xl bg-[#2E6F73] border border-[#7FB3B8]/40 flex items-center justify-center font-mono font-bold text-xs text-[#EADCC8]"
+      title="<%= profile?.fullName || 'Kandidat' %>"
+    >
+      <%= (profile?.fullName || 'AA').split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase() %>
+    </div>
+  </div>
+</header>

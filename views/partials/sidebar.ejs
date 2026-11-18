@@ -1,0 +1,168 @@
+<aside
+  class="w-full lg:w-[260px] shrink-0 bg-[#0F3D3E] border-b lg:border-b-0 lg:border-r border-[#7FB3B8]/15 flex flex-col justify-between p-4 select-none"
+>
+  <div>
+    <!-- Brand Header -->
+    <div class="flex items-center gap-3 px-2 py-2.5 mb-5">
+      <div
+        class="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2E6F73] to-[#C6601F] flex items-center justify-center font-mono font-bold text-sm text-[#EADCC8] shadow-md"
+      >
+        AA
+      </div>
+      <div>
+        <div class="text-[15px] font-bold tracking-tight text-[#EADCC8]">AutoApply AI</div>
+        <div class="text-[11px] font-mono text-[#7FB3B8]">Personal Edition v3.0</div>
+      </div>
+    </div>
+
+    <!-- MAIN NAVIGATION -->
+    <div class="mb-5">
+      <div class="px-3 mb-2 text-[10px] font-mono uppercase tracking-wider text-[#7FB3B8]/70">MAIN</div>
+      <nav class="space-y-1">
+        <a
+          href="/dashboard"
+          class="flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all <%= activePage === 'dashboard' ? 'bg-[#2E6F73] text-[#EADCC8] shadow-sm' : 'text-[#7FB3B8] hover:bg-[#2E6F73]/30 hover:text-[#EADCC8]' %>"
+        >
+          <span>Overview Draf</span>
+          <% if (typeof stats !== 'undefined') { %>
+          <span class="px-2 py-0.5 rounded-full text-[11px] font-mono bg-[#C6601F] text-[#EADCC8] tabular-nums">
+            <%= stats.pendingCount %>
+          </span>
+          <% } %>
+        </a>
+
+        <!-- Accordion: Status Lamaran -->
+        <div>
+          <button
+            type="button"
+            data-accordion-toggle="accordionStatusLamaran"
+            class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-medium text-[#7FB3B8] hover:bg-[#2E6F73]/30 hover:text-[#EADCC8] transition-all"
+          >
+            <span>Status Lamaran</span>
+            <svg
+              data-accordion-chevron
+              class="w-3.5 h-3.5 transition-transform duration-200 rotate-180"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div id="accordionStatusLamaran" class="pl-4 pr-1 pt-1 space-y-1">
+            <a
+              href="/dashboard"
+              class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12px] text-[#7FB3B8] hover:text-[#EADCC8]"
+            >
+              <span>• Menunggu</span>
+              <span class="font-mono text-[11px] tabular-nums"><%= typeof stats !== 'undefined' ? stats.pendingCount : '-' %></span>
+            </a>
+            <a
+              href="/history"
+              class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12px] text-[#7FB3B8] hover:text-[#EADCC8]"
+            >
+              <span>• Terkirim</span>
+              <span class="font-mono text-[11px] tabular-nums"><%= typeof stats !== 'undefined' ? stats.sentCount : '-' %></span>
+            </a>
+            <a
+              href="/history"
+              class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12px] text-[#7FB3B8] hover:text-[#EADCC8]"
+            >
+              <span>• Ditolak</span>
+              <span class="font-mono text-[11px] tabular-nums"><%= typeof stats !== 'undefined' ? stats.rejectedCount : '-' %></span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Accordion: Lowongan Kerja -->
+        <div>
+          <button
+            type="button"
+            data-accordion-toggle="accordionLowonganKerja"
+            class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-medium text-[#7FB3B8] hover:bg-[#2E6F73]/30 hover:text-[#EADCC8] transition-all"
+          >
+            <span>Lowongan Kerja</span>
+            <svg
+              data-accordion-chevron
+              class="w-3.5 h-3.5 transition-transform duration-200 rotate-180"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div id="accordionLowonganKerja" class="pl-4 pr-1 pt-1 space-y-1">
+            <a
+              href="/dashboard"
+              class="flex items-center justify-between px-3 py-1.5 rounded-lg text-[12px] text-[#7FB3B8] hover:text-[#EADCC8]"
+            >
+              <span>• Semua Terindeks</span>
+              <span class="font-mono text-[11px] tabular-nums"><%= typeof stats !== 'undefined' ? stats.totalScannedJobs : '-' %></span>
+            </a>
+            <button
+              type="button"
+              data-open-quick-capture
+              class="w-full flex items-center justify-between px-3 py-1.5 rounded-lg text-[12px] text-[#EADCC8] hover:bg-[#2E6F73]/30 text-left"
+            >
+              <span>• + Input Manual</span>
+              <span class="text-[10px] font-mono text-[#C6601F]">OCR</span>
+            </button>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- TOOLS NAVIGATION -->
+    <div>
+      <div class="px-3 mb-2 text-[10px] font-mono uppercase tracking-wider text-[#7FB3B8]/70">TOOLS</div>
+      <nav class="space-y-1">
+        <a
+          href="/documents"
+          class="flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all <%= activePage === 'documents' ? 'bg-[#2E6F73] text-[#EADCC8]' : 'text-[#7FB3B8] hover:bg-[#2E6F73]/30 hover:text-[#EADCC8]' %>"
+        >
+          <span>Profil &amp; CV PDF</span>
+          <span class="text-[10px] font-mono text-[#7FB3B8]">GridFS</span>
+        </a>
+        <a
+          href="/history"
+          class="flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all <%= activePage === 'history' ? 'bg-[#2E6F73] text-[#EADCC8]' : 'text-[#7FB3B8] hover:bg-[#2E6F73]/30 hover:text-[#EADCC8]' %>"
+        >
+          <span>Pelacak Seleksi</span>
+        </a>
+        <a
+          href="/settings"
+          class="flex items-center justify-between px-3 py-2.5 rounded-xl text-[13px] font-medium transition-all <%= activePage === 'settings' ? 'bg-[#2E6F73] text-[#EADCC8]' : 'text-[#7FB3B8] hover:bg-[#2E6F73]/30 hover:text-[#EADCC8]' %>"
+        >
+          <span>Pengaturan Sistem</span>
+        </a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Bottom Glass Clock Widget & Pro Scan CTA -->
+  <div class="mt-6 space-y-3">
+    <div class="rounded-2xl p-3.5 bg-[#0A0F14]/70 border border-[#7FB3B8]/20 backdrop-blur-md">
+      <div class="text-[10px] font-mono uppercase tracking-wider text-[#7FB3B8] mb-1">WAKTU OPERASIONAL</div>
+      <div data-wib-time class="text-[16px] font-mono font-bold text-[#EADCC8] tabular-nums">--:--:-- WIB</div>
+      <div class="text-[11px] text-[#7FB3B8] mt-1">Jadwal Cron: <span class="text-[#EADCC8] font-mono">07:00 WIB</span></div>
+    </div>
+
+    <button
+      type="button"
+      data-trigger-scan
+      class="w-full py-2.5 px-4 rounded-xl btn-amber text-[13px] flex items-center justify-center gap-2 shadow-lg"
+    >
+      <span>Pindai Lowongan AI</span>
+    </button>
+
+    <form action="/logout" method="POST">
+      <button
+        type="submit"
+        class="w-full py-2 px-3 rounded-xl text-[12px] text-[#7FB3B8] hover:text-red-300 hover:bg-red-950/30 border border-transparent hover:border-red-500/30 transition-all"
+      >
+        Keluar Sesi Privat
+      </button>
+    </form>
+  </div>
+</aside>

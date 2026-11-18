@@ -1,0 +1,148 @@
+<%- include('partials/head', { pageTitle: 'Pelacak Tahapan Seleksi — AutoApply AI v3.0' }) %>
+
+<div class="min-h-screen flex flex-col lg:flex-row">
+  <%- include('partials/sidebar', { activePage: 'history' }) %>
+
+  <div class="flex-1 flex flex-col min-w-0">
+    <%- include('partials/topbar', { profile }) %>
+
+    <main class="p-5 space-y-5 max-w-[1440px] w-full mx-auto">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 class="text-[20px] font-bold text-[#EADCC8]">Riwayat &amp; Pelacak Tahapan Seleksi</h2>
+          <p class="text-[12px] text-[#7FB3B8]">
+            Pantau progres lamaran terkirim, jadwal wawancara, dan pengingat follow-up otomatis (+7 hari kerja)
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          <% [
+            { id: 'all', label: 'Semua' },
+            { id: 'followup', label: 'Perlu Follow-Up' },
+            { id: 'sent', label: 'Terkirim' },
+            { id: 'in_review', label: 'Diproses HRD' },
+            { id: 'interview', label: 'Wawancara' },
+            { id: 'offered', label: 'Diterima' },
+            { id: 'company_rejected', label: 'Ditolak' }
+          ].forEach((tab, idx) => { %>
+          <button
+            type="button"
+            data-history-filter="<%= tab.id %>"
+            class="px-3 py-1.5 rounded-xl text-[12px] font-semibold <%= idx === 0 ? 'bg-[#C6601F] text-[#EADCC8]' : 'bg-[#0A0F14] text-[#7FB3B8] border border-[#7FB3B8]/20' %>"
+          >
+            <%= tab.label %>
+          </button>
+          <% }) %>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <% if (applications.length === 0) { %>
+        <div class="rounded-2xl bento-card p-8 text-center text-[13px] text-[#7FB3B8]">
+          Belum ada riwayat lamaran terkirim. Kirim draf pertama Anda dari Dashboard.
+        </div>
+        <% } %>
+
+        <% applications.forEach((app) => { %>
+        <div
+          data-history-row
+          data-stage="<%= app.applicationStage %>"
+          data-followup="<%= app.isFollowUpDue %>"
+          class="rounded-2xl bento-card p-4 flex flex-wrap items-center justify-between gap-4"
+        >
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-2.5 py-0.5 rounded text-[11px] font-mono uppercase bg-[#2E6F73] text-[#EADCC8]">
+                <%= app.applicationStage.replace('_', ' ') %>
+              </span>
+              <% if (app.isFollowUpDue) { %>
+              <span class="px-2.5 py-0.5 rounded text-[11px] font-semibold bg-[#C6601F] text-[#EADCC8]">
+                Perlu Follow-Up (&gt; 7 Hari Kerja)
+              </span>
+              <% } %>
+              <span class="text-[11px] font-mono text-[#7FB3B8]">
+                Skor AI: <%= app.matchScore %>% • <%= app.jobId?.sourcePlatform || '-' %>
+              </span>
+            </div>
+
+            <h3 class="text-[16px] font-semibold text-[#EADCC8]"><%= app.jobId?.jobTitle || 'Posisi' %></h3>
+            <p class="text-[12px] text-[#7FB3B8]">
+              <%= app.jobId?.companyName || '-' %> • Email: <span class="font-mono"><%= app.recipientEmail %></span>
+            </p>
+            <% if (app.interviewDate) { %>
+            <p class="text-[12px] text-emerald-300 font-mono">
+              Jadwal Wawancara: <%= new Date(app.interviewDate).toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }) %> WIB
+            </p>
+            <% } %>
+            <% if (app.interviewNotes) { %>
+            <p class="text-[12px] text-[#EADCC8]/80">Catatan: <%= app.interviewNotes %></p>
+            <% } %>
+          </div>
+
+          <button
+            type="button"
+            data-open-stage-modal
+            data-id="<%= app._id %>"
+            data-title="<%= app.jobId?.jobTitle || '' %> - <%= app.jobId?.companyName || '' %>"
+            data-stage="<%= app.applicationStage %>"
+            data-interview-date="<%= app.interviewDate ? new Date(app.interviewDate).toISOString().slice(0, 16) : '' %>"
+            data-interview-notes="<%= app.interviewNotes || '' %>"
+            class="px-4 py-2 rounded-xl btn-lagoon text-[12px] font-semibold"
+          >
+            Perbarui Status / Jadwal
+          </button>
+        </div>
+        <% }) %>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Modal Update Tahapan & Jadwal Wawancara -->
+<div id="stageModal" class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="w-full max-w-md rounded-2xl bg-[#0F3D3E] border border-[#7FB3B8]/35 p-6">
+    <div class="flex items-center justify-between pb-3 border-b border-[#7FB3B8]/20">
+      <h3 id="stageModalJobTitle" class="text-[15px] font-semibold text-[#EADCC8]">Perbarui Tahapan</h3>
+      <button id="closeStageModal" class="text-[#7FB3B8] hover:text-[#EADCC8]">✕</button>
+    </div>
+
+    <form id="stageUpdateForm" class="mt-4 space-y-3.5">
+      <input type="hidden" id="stageDraftId" />
+      <div>
+        <label class="block text-[12px] text-[#7FB3B8] mb-1">Tahapan Seleksi</label>
+        <select id="stageSelect" class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian">
+          <option value="sent">Terkirim (sent)</option>
+          <option value="in_review">Diproses / Screening HRD (in_review)</option>
+          <option value="interview">Jadwal Wawancara (interview)</option>
+          <option value="offered">Diterima / Offering (offered)</option>
+          <option value="company_rejected">Ditolak Perusahaan (company_rejected)</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-[12px] text-[#7FB3B8] mb-1">Tanggal &amp; Jam Wawancara (WIB)</label>
+        <input id="interviewDateInput" type="datetime-local" class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian" />
+      </div>
+
+      <div>
+        <label class="block text-[12px] text-[#7FB3B8] mb-1">Lokasi / Tautan Meeting &amp; Catatan</label>
+        <textarea
+          id="interviewNotesInput"
+          rows="3"
+          placeholder="Link Google Meet / Zoom / Alamat kantor / Hasil wawancara..."
+          class="w-full rounded-xl p-3 text-[13px] input-obsidian"
+        ></textarea>
+      </div>
+
+      <button type="submit" class="w-full py-2.5 rounded-xl btn-amber text-[13px]">
+        Simpan Pembaruan
+      </button>
+    </form>
+  </div>
+</div>
+
+<%- include('partials/quick-capture-modal') %>
+<script src="/js/motion.js"></script>
+<script src="/js/history.js"></script>
+</body>
+</html>

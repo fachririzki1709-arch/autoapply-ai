@@ -1,0 +1,119 @@
+<div
+  id="quickCaptureModal"
+  class="hidden fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4"
+>
+  <div class="w-full max-w-xl rounded-2xl bg-[#0F3D3E] border border-[#7FB3B8]/35 p-6 shadow-2xl">
+    <div class="flex items-center justify-between pb-3 border-b border-[#7FB3B8]/20">
+      <div>
+        <h3 class="text-[18px] font-semibold text-[#EADCC8]">Input Cepat Lowongan (Quick Capture)</h3>
+        <p class="text-[12px] text-[#7FB3B8]">
+          Tempel tautan, teks pesan WhatsApp/Telegram, atau tangkapan layar poster (Ctrl+V)
+        </p>
+      </div>
+      <button
+        type="button"
+        data-close-quick-capture
+        class="w-8 h-8 rounded-lg bg-[#0A0F14] text-[#7FB3B8] hover:text-[#EADCC8] flex items-center justify-center"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Tab Selector -->
+    <div class="grid grid-cols-3 gap-2 my-4">
+      <button
+        type="button"
+        data-qc-tab="text"
+        class="py-2 rounded-xl text-[12px] font-semibold bg-[#C6601F] text-[#EADCC8] transition-all"
+      >
+        1. Tempel Teks
+      </button>
+      <button
+        type="button"
+        data-qc-tab="url"
+        class="py-2 rounded-xl text-[12px] font-semibold bg-[#0A0F14] text-[#7FB3B8] transition-all"
+      >
+        2. Tempel URL
+      </button>
+      <button
+        type="button"
+        data-qc-tab="image"
+        class="py-2 rounded-xl text-[12px] font-semibold bg-[#0A0F14] text-[#7FB3B8] transition-all"
+      >
+        3. Poster / Ctrl+V
+      </button>
+    </div>
+
+    <!-- Platform Source -->
+    <div class="mb-3">
+      <label class="block text-[12px] font-medium text-[#7FB3B8] mb-1">Sumber Platform</label>
+      <select id="qcSourcePlatform" class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian">
+        <option value="instagram">Instagram</option>
+        <option value="facebook">Facebook</option>
+        <option value="linkedin">LinkedIn</option>
+        <option value="whatsapp_telegram">WhatsApp / Telegram</option>
+        <option value="jobstreet">JobStreet</option>
+        <option value="glints">Glints</option>
+        <option value="other">Lainnya</option>
+      </select>
+    </div>
+
+    <!-- Panel 1: Copy-Paste Text -->
+    <div id="qcTextPanel" class="mb-4">
+      <label class="block text-[12px] font-medium text-[#7FB3B8] mb-1">Teks Broadcast / Deskripsi Lowongan</label>
+      <textarea
+        id="qcTextInput"
+        rows="5"
+        placeholder="Tempel informasi lowongan lengkap termasuk kualifikasi, email HRD, dan format subjek..."
+        class="w-full rounded-xl p-3 text-[13px] input-obsidian"
+      ></textarea>
+    </div>
+
+    <!-- Panel 2: URL -->
+    <div id="qcUrlPanel" class="hidden mb-4">
+      <label class="block text-[12px] font-medium text-[#7FB3B8] mb-1">Tautan Halaman Lowongan (URL)</label>
+      <input
+        id="qcUrlInput"
+        type="url"
+        placeholder="https://www.linkedin.com/jobs/view/..."
+        class="w-full rounded-xl px-3.5 py-2.5 text-[13px] input-obsidian"
+      />
+    </div>
+
+    <!-- Panel 3: Screenshot / Poster Image Vision OCR -->
+    <div id="qcImagePanel" class="hidden mb-4 space-y-3">
+      <div
+        class="rounded-xl border-2 border-dashed border-[#7FB3B8]/35 bg-[#0A0F14]/80 p-4 text-center"
+      >
+        <p class="text-[12px] text-[#EADCC8] mb-2">
+          Tekan <kbd class="px-1.5 py-0.5 rounded bg-[#2E6F73] font-mono text-[11px]">Ctrl + V</kbd> di mana saja pada modal ini atau pilih berkas gambar poster:
+        </p>
+        <input
+          id="qcPosterInput"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          class="text-[12px] text-[#7FB3B8]"
+        />
+        <img id="qcImagePreview" alt="Pratinjau Poster" class="hidden mt-3 max-h-44 mx-auto rounded-lg border border-[#7FB3B8]/30" />
+      </div>
+      <div>
+        <label class="block text-[12px] font-medium text-[#7FB3B8] mb-1">Catatan / Caption Tambahan (Opsional)</label>
+        <input
+          id="qcImageCaption"
+          type="text"
+          placeholder="Misal: Info loker dari Instagram @lokercianjur"
+          class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+        />
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end gap-2.5 pt-2">
+      <button type="button" data-close-quick-capture class="px-4 py-2 rounded-xl btn-lagoon text-[12px]">
+        Batal
+      </button>
+      <button type="button" id="submitQuickCaptureBtn" class="px-5 py-2 rounded-xl btn-amber text-[13px]">
+        Proses dengan AI Sekarang
+      </button>
+    </div>
+  </div>
+</div>

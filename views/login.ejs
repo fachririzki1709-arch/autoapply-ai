@@ -1,0 +1,63 @@
+<%- include('partials/head', { pageTitle: 'Masuk Privat — AutoApply AI v3.0' }) %>
+
+<div class="min-h-screen flex items-center justify-center p-4 bg-[#0A0F14]">
+  <div class="w-full max-w-md rounded-2xl hero-ai-card p-7 shadow-2xl">
+    <div class="flex items-center gap-3 mb-6">
+      <div
+        class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#2E6F73] to-[#C6601F] flex items-center justify-center font-mono font-bold text-base text-[#EADCC8]"
+      >
+        AA
+      </div>
+      <div>
+        <h1 class="text-[20px] font-bold text-[#EADCC8]">AutoApply AI</h1>
+        <p class="text-[12px] text-[#7FB3B8]">Gerbang Privat Single-Tenant • Personal Edition v3.0</p>
+      </div>
+    </div>
+
+    <% if (error) { %>
+    <div class="mb-4 p-3 rounded-xl bg-red-950/80 border border-red-500/50 text-[12px] text-red-200">
+      <%= error %>
+    </div>
+    <% } %>
+
+    <form action="/login" method="POST" class="space-y-4">
+      <div>
+        <label class="block text-[12px] font-medium text-[#7FB3B8] mb-1.5">Email Pemilik</label>
+        <input
+          type="email"
+          name="email"
+          required
+          value="<%= email %>"
+          placeholder="pemilik@domainanda.com"
+          class="w-full rounded-xl px-3.5 py-2.5 text-[14px] input-obsidian"
+        />
+      </div>
+
+      <div>
+        <label class="block text-[12px] font-medium text-[#7FB3B8] mb-1.5">Kata Sandi</label>
+        <input
+          type="password"
+          name="password"
+          required
+          placeholder="••••••••••••"
+          class="w-full rounded-xl px-3.5 py-2.5 text-[14px] input-obsidian"
+        />
+      </div>
+
+      <div class="flex items-center justify-between text-[12px] text-[#7FB3B8]">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" name="rememberMe" value="1" class="rounded accent-[#C6601F]" />
+          <span>Ingat Saya (7 Hari)</span>
+        </label>
+        <span class="font-mono text-[11px] text-[#7FB3B8]/70">Rate-Limited 5x/15m</span>
+      </div>
+
+      <button type="submit" class="w-full py-3 rounded-xl btn-amber text-[14px] shadow-lg">
+        Masuk ke Ruang Kerja AI
+      </button>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

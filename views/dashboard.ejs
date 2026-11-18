@@ -1,0 +1,432 @@
+<%- include('partials/head', { pageTitle: 'Dashboard Bento — AutoApply AI v3.0' }) %>
+
+<div class="min-h-screen flex flex-col lg:flex-row">
+  <%- include('partials/sidebar', { activePage: 'dashboard', stats }) %>
+
+  <div class="flex-1 flex flex-col min-w-0">
+    <%- include('partials/topbar', { profile }) %>
+
+    <main class="p-5 space-y-5 max-w-[1600px] w-full mx-auto">
+      <!-- ROW 1: 3-Column Bento Grid (4 cols + 4 cols + 4 cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- CARD 1: Hero AI Copilot Card -->
+        <section
+          data-bento-card
+          class="lg:col-span-4 rounded-2xl hero-ai-card p-5 relative overflow-hidden flex flex-col justify-between"
+        >
+          <div class="relative z-10">
+            <div class="flex items-center justify-between mb-3">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-mono bg-[#2E6F73]/50 text-[#EADCC8] border border-[#7FB3B8]/30">
+                AI Copilot Core
+              </span>
+              <span class="text-[11px] font-mono text-[#C6601F] font-semibold">
+                +<%= stats.todayScannedJobs %> Hari Ini
+              </span>
+            </div>
+            <div class="text-[12px] font-medium text-[#7FB3B8]">Total Lowongan Dipindai</div>
+            <div class="text-[32px] leading-[1.15] font-bold text-[#EADCC8] tabular-nums mt-1">
+              <%= stats.totalScannedJobs %>
+            </div>
+            <p class="text-[12px] text-[#7FB3B8] mt-2 leading-relaxed">
+              Pemindaian lintas portal &amp; Vision OCR poster otomatis terhubung ke Gemini 2.5 Flash.
+            </p>
+          </div>
+
+          <!-- Crystalline Geometric SVG Accent -->
+          <svg
+            class="absolute -right-6 -bottom-6 w-44 h-44 opacity-35 pointer-events-none"
+            viewBox="0 0 200 200"
+            fill="none"
+          >
+            <polygon points="100,15 175,65 155,155 45,155 25,65" fill="url(#tealCrystal1)" />
+            <polygon points="100,15 175,65 100,105" fill="#7FB3B8" fill-opacity="0.45" />
+            <polygon points="100,105 155,155 45,155" fill="#2E6F73" fill-opacity="0.7" />
+            <defs>
+              <linearGradient id="tealCrystal1" x1="25" y1="15" x2="175" y2="155" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#7FB3B8" />
+                <stop offset="1" stop-color="#0F3D3E" />
+              </linearGradient>
+            </defs>
+          </svg>
+
+          <div class="relative z-10 mt-5 flex items-center gap-2.5">
+            <button
+              type="button"
+              data-trigger-scan
+              class="px-4 py-2.5 rounded-xl btn-amber text-[13px] shadow-md"
+            >
+              Pindai Lowongan AI
+            </button>
+            <button
+              type="button"
+              data-open-quick-capture
+              class="px-3.5 py-2.5 rounded-xl btn-lagoon text-[12px] font-semibold"
+            >
+              + Quick Capture
+            </button>
+          </div>
+        </section>
+
+        <!-- CARD 2: Ringkasan Lamaran & Skor -->
+        <section data-bento-card class="lg:col-span-4 rounded-2xl bento-card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-[18px] leading-[1.3] font-semibold text-[#EADCC8]">Ringkasan Lamaran</h2>
+              <% if (stats.needFollowUpCount > 0) { %>
+              <a
+                href="/history"
+                class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-[#C6601F]/25 border border-[#C6601F] text-[#EADCC8]"
+              >
+                <%= stats.needFollowUpCount %> Perlu Follow-Up
+              </a>
+              <% } %>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="rounded-xl p-3.5 bg-[#0A0F14]/75 border border-[#7FB3B8]/15">
+                <div class="text-[12px] text-[#7FB3B8]">Menunggu Tinjauan</div>
+                <div class="text-[28px] font-bold text-[#EADCC8] tabular-nums mt-0.5">
+                  <%= stats.pendingCount %>
+                </div>
+              </div>
+              <div class="rounded-xl p-3.5 bg-[#0A0F14]/75 border border-[#7FB3B8]/15">
+                <div class="text-[12px] text-[#7FB3B8]">Terkirim (100% PDF)</div>
+                <div class="text-[28px] font-bold text-[#EADCC8] tabular-nums mt-0.5">
+                  <%= stats.sentCount %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Portal Badges -->
+          <div class="mt-4 pt-3 border-t border-[#7FB3B8]/15">
+            <div class="text-[11px] text-[#7FB3B8] mb-2">Konektor Sumber Aktif:</div>
+            <div class="flex flex-wrap gap-1.5">
+              <% ['LinkedIn', 'Instagram', 'Facebook', 'JobStreet', 'Glints', 'Kalibrr'].forEach((p) => { %>
+              <span class="px-2.5 py-1 rounded-lg text-[11px] font-mono bg-[#0A0F14] text-[#7FB3B8] border border-[#7FB3B8]/20">
+                <%= p %>
+              </span>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+
+        <!-- CARD 3: Radar & Akurasi AI (Donut Ring Gauge + Spline Wave Trendline) -->
+        <section data-bento-card class="lg:col-span-4 rounded-2xl bento-card p-5 flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-[18px] leading-[1.3] font-semibold text-[#EADCC8]">Akurasi Kecocokan AI</h2>
+              <p class="text-[12px] text-[#7FB3B8]">Multi-CV PDF Grounding Score</p>
+            </div>
+
+            <!-- Multi-Segment Circular SVG Ring Gauge -->
+            <div class="relative w-24 h-24 flex items-center justify-center">
+              <svg class="w-24 h-24 -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="44" stroke="#2E6F73" stroke-opacity="0.35" stroke-width="9" fill="none" />
+                <circle
+                  id="aiAccuracyRing"
+                  data-score="<%= stats.avgMatchScore %>"
+                  cx="50"
+                  cy="50"
+                  r="44"
+                  stroke="#C6601F"
+                  stroke-width="9"
+                  stroke-linecap="round"
+                  fill="none"
+                />
+              </svg>
+              <span
+                id="aiAccuracyCounter"
+                class="absolute text-[14px] font-mono font-bold text-[#EADCC8] tabular-nums"
+              >
+                <%= stats.avgMatchScore %>%
+              </span>
+            </div>
+          </div>
+
+          <!-- Smooth Spline Wave Trendline -->
+          <div class="mt-3">
+            <div class="flex items-center justify-between text-[11px] text-[#7FB3B8] mb-1">
+              <span>Tren Lolos Seleksi AI</span>
+              <span class="font-mono text-[#EADCC8]">Ambang >= <%= profile.minMatchScore %>%</span>
+            </div>
+            <svg class="w-full h-16" viewBox="0 0 300 64" fill="none">
+              <path
+                d="M0 50 C 45 48, 70 20, 120 26 C 170 32, 200 10, 250 16 C 275 19, 290 8, 300 6"
+                stroke="#C6601F"
+                stroke-width="2.5"
+                fill="none"
+              />
+              <path
+                d="M0 56 C 55 52, 95 36, 150 38 C 205 40, 240 24, 300 22"
+                stroke="#7FB3B8"
+                stroke-width="1.75"
+                stroke-dasharray="4 4"
+                fill="none"
+              />
+            </svg>
+          </div>
+        </section>
+      </div>
+
+      <!-- ROW 2: 3-Column Bento Grid (4 cols + 4 cols + 4 cols) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <!-- CARD 4: Analitik & Kuota Pemindaian Mingguan -->
+        <section data-bento-card class="lg:col-span-4 rounded-2xl bento-card p-5 flex flex-col justify-between">
+          <div>
+            <h2 class="text-[18px] leading-[1.3] font-semibold text-[#EADCC8]">Analitik Mingguan</h2>
+            <p class="text-[12px] text-[#7FB3B8] mb-4">Distribusi Domain &amp; Pemindaian 7 Hari</p>
+
+            <!-- Segmented Horizontal Progress Bar -->
+            <% const totalDomain = Math.max(1, domainCounts.logistik + domainCounts.qc + domainCounts.webdev + domainCounts.desain); %>
+            <div class="w-full h-3 rounded-full bg-[#0A0F14] overflow-hidden flex gap-0.5 p-0.5 border border-[#7FB3B8]/20">
+              <div style="width: <%= (domainCounts.logistik / totalDomain) * 100 %>%" class="bg-[#C6601F] rounded-l-full"></div>
+              <div style="width: <%= (domainCounts.qc / totalDomain) * 100 %>%" class="bg-[#7FB3B8]"></div>
+              <div style="width: <%= (domainCounts.webdev / totalDomain) * 100 %>%" class="bg-[#2E6F73]"></div>
+              <div style="width: <%= (domainCounts.desain / totalDomain) * 100 %>%" class="bg-[#EADCC8] rounded-r-full"></div>
+            </div>
+
+            <div class="flex flex-wrap gap-1.5 mt-3">
+              <span class="px-2 py-0.5 rounded text-[11px] bg-[#0A0F14] text-[#EADCC8] border border-[#C6601F]/50">
+                Logistik/SAP (<%= domainCounts.logistik %>)
+              </span>
+              <span class="px-2 py-0.5 rounded text-[11px] bg-[#0A0F14] text-[#7FB3B8] border border-[#7FB3B8]/30">
+                QC (<%= domainCounts.qc %>)
+              </span>
+              <span class="px-2 py-0.5 rounded text-[11px] bg-[#0A0F14] text-[#7FB3B8] border border-[#2E6F73]">
+                Web Dev (<%= domainCounts.webdev %>)
+              </span>
+              <span class="px-2 py-0.5 rounded text-[11px] bg-[#0A0F14] text-[#EADCC8]/80 border border-[#7FB3B8]/20">
+                Desain (<%= domainCounts.desain %>)
+              </span>
+            </div>
+          </div>
+
+          <!-- Dual-Bar Chart (Dipindai vs Lolos AI) -->
+          <div class="mt-5 pt-4 border-t border-[#7FB3B8]/15">
+            <div class="grid grid-cols-7 gap-2 items-end h-28">
+              <% const maxBar = Math.max(5, ...weeklyStats.map(w => Math.max(w.scanned, w.passed))); %>
+              <% weeklyStats.forEach((day) => { %>
+              <div class="flex flex-col items-center gap-1 h-full justify-end">
+                <div class="flex items-end gap-1 h-20 w-full justify-center">
+                  <div
+                    data-bar-grow
+                    style="height: <%= Math.max(12, Math.round((day.scanned / maxBar) * 100)) %>%"
+                    class="w-2.5 rounded-t bg-[#2E6F73]"
+                    title="Dipindai: <%= day.scanned %>"
+                  ></div>
+                  <div
+                    data-bar-grow
+                    style="height: <%= Math.max(8, Math.round((day.passed / maxBar) * 100)) %>%"
+                    class="w-2.5 rounded-t bg-[#C6601F]"
+                    title="Lolos AI: <%= day.passed %>"
+                  ></div>
+                </div>
+                <span class="text-[10px] font-mono text-[#7FB3B8]"><%= day.label %></span>
+              </div>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+
+        <!-- CARD 5: Antrean Draf & Lowongan Terindeks -->
+        <section data-bento-card class="lg:col-span-4 rounded-2xl bento-card p-5 flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-3">
+            <h2 class="text-[18px] leading-[1.3] font-semibold text-[#EADCC8]">Antrean Draf</h2>
+            <div class="flex items-center gap-1">
+              <button
+                type="button"
+                data-stage-tab="draft_pending"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#C6601F] text-[#EADCC8]"
+              >
+                Menunggu
+              </button>
+              <button
+                type="button"
+                data-stage-tab="sent_group"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#0A0F14] text-[#7FB3B8]"
+              >
+                Terkirim
+              </button>
+              <button
+                type="button"
+                data-stage-tab="rejected_group"
+                class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-[#0A0F14] text-[#7FB3B8]"
+              >
+                Ditolak
+              </button>
+            </div>
+          </div>
+
+          <!-- Platform Filter Pills -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-2 mb-2.5">
+            <% [
+              { id: 'all', label: 'Semua' },
+              { id: 'quick_capture', label: 'Input Cepat' },
+              { id: 'linkedin', label: 'LinkedIn' },
+              { id: 'instagram', label: 'Instagram' },
+              { id: 'facebook', label: 'Facebook' },
+              { id: 'jobstreet', label: 'JobStreet' },
+              { id: 'glints', label: 'Glints' }
+            ].forEach((pf, i) => { %>
+            <button
+              type="button"
+              data-platform-filter="<%= pf.id %>"
+              class="shrink-0 px-2.5 py-1 rounded-lg text-[11px] border transition-all <%= i === 0 ? 'bg-[#2E6F73] text-[#EADCC8] border-[#7FB3B8]' : 'bg-[#0A0F14]/80 text-[#7FB3B8] border-[#7FB3B8]/20' %>"
+            >
+              <%= pf.label %>
+            </button>
+            <% }) %>
+          </div>
+
+          <input
+            id="localQueueSearch"
+            type="text"
+            placeholder="Filter antrean posisi / perusahaan..."
+            class="w-full rounded-xl px-3 py-1.5 text-[12px] input-obsidian mb-3"
+          />
+
+          <!-- Skeleton Shimmer Loader saat Pindai AI -->
+          <div id="queueSkeletonLoader" class="hidden space-y-2.5">
+            <div class="h-16 rounded-xl skeleton-shimmer"></div>
+            <div class="h-16 rounded-xl skeleton-shimmer"></div>
+            <div class="h-16 rounded-xl skeleton-shimmer"></div>
+          </div>
+
+          <!-- Interactive Queue List -->
+          <div id="draftQueueList" class="space-y-2.5 max-h-[430px] overflow-y-auto pr-1"></div>
+        </section>
+
+        <!-- CARD 6: Human-in-the-Loop Draft Editor & AI Assistant -->
+        <section data-bento-card class="lg:col-span-4 rounded-2xl bento-card p-5 flex flex-col justify-between">
+          <div>
+            <div class="flex items-start justify-between gap-2 pb-3 border-b border-[#7FB3B8]/15">
+              <div>
+                <span class="text-[11px] font-mono text-[#C6601F]">Human-in-the-Loop Copilot</span>
+                <h3 id="editorJobTitle" class="text-[15px] font-semibold text-[#EADCC8] mt-0.5">
+                  Pilih Draf di Antrean
+                </h3>
+                <p id="editorCompanyMeta" class="text-[12px] text-[#7FB3B8]">-</p>
+              </div>
+            </div>
+
+            <!-- AI Match Reasoning Chat Bubble -->
+            <div class="my-3 p-3 rounded-xl bg-[#0A0F14]/75 border border-[#7FB3B8]/20">
+              <div class="text-[11px] font-mono text-[#7FB3B8] mb-1">Analisis Kecocokan Gemini AI:</div>
+              <ul id="editorAiReasoning" class="space-y-1"></ul>
+            </div>
+
+            <!-- Mandatory Subject Compliance Badge -->
+            <div
+              id="editorSubjectRuleBox"
+              class="hidden mb-3 p-2.5 rounded-xl bg-sky-950/70 border border-sky-400/40 text-[11px] text-sky-200"
+            >
+              <span class="font-semibold">Wajib Format Subjek HRD:</span>
+              <span id="editorSubjectRuleText" class="font-mono ml-1"></span>
+            </div>
+
+            <!-- 30-Day Duplicate Company Warning Banner -->
+            <div
+              id="editorDuplicateBanner"
+              class="hidden mb-3 p-3 rounded-xl bg-red-950/85 border border-red-500/60 text-[11px] text-red-200 space-y-2"
+            >
+              <div class="font-semibold">Peringatan Duplikasi Perusahaan (&lt; 30 Hari):</div>
+              <p id="editorDuplicateText"></p>
+              <label class="flex items-center gap-2 cursor-pointer text-[#EADCC8]">
+                <input id="confirmDuplicateOverride" type="checkbox" class="accent-[#C6601F]" />
+                <span>Saya sadar dan tetap ingin mengirim ulang lamaran ini</span>
+              </label>
+            </div>
+
+            <!-- Form Editor -->
+            <div class="space-y-2.5">
+              <input type="hidden" id="editorDraftId" />
+
+              <div>
+                <label class="block text-[11px] font-medium text-[#7FB3B8] mb-1">Email HRD Tujuan</label>
+                <input
+                  id="editorRecipientEmail"
+                  type="email"
+                  placeholder="hrd@perusahaan.co.id"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-medium text-[#7FB3B8] mb-1">Subjek Email</label>
+                <input
+                  id="editorEmailSubject"
+                  type="text"
+                  class="w-full rounded-xl px-3 py-2 text-[13px] input-obsidian"
+                />
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-medium text-[#7FB3B8] mb-1">Isi Surat Lamaran</label>
+                <textarea
+                  id="editorEmailBody"
+                  rows="5"
+                  class="w-full rounded-xl p-3 text-[13px] leading-[1.6] input-obsidian"
+                ></textarea>
+              </div>
+
+              <!-- Preset Bundel PDF Selector -->
+              <div>
+                <label class="block text-[11px] font-medium text-[#7FB3B8] mb-1">Lampiran Berkas PDF</label>
+                <select id="editorPresetSelect" class="w-full rounded-xl px-3 py-2 text-[12px] input-obsidian">
+                  <% presets.forEach((p) => { %>
+                  <option value="<%= p._id %>">
+                    Preset: <%= p.presetName %> (<%= Math.round((p.compressedSizeBytes || 0) / 1024) %> KB)
+                  </option>
+                  <% }) %>
+                  <option value="cv_only">Hanya CV Saja (Tanpa Bundel)</option>
+                </select>
+                <div class="flex items-center justify-between mt-1.5">
+                  <span id="editorAttachmentMeta" class="text-[11px] font-mono text-[#7FB3B8]"></span>
+                  <a
+                    id="editorPreviewPdfBtn"
+                    href="#"
+                    target="_blank"
+                    class="hidden text-[11px] font-semibold text-[#C6601F] hover:underline"
+                  >
+                    Pratinjau PDF ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Primary & Secondary Actions -->
+          <div class="mt-4 pt-3 border-t border-[#7FB3B8]/15 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <button type="button" id="saveDraftBtn" class="px-3 py-2 rounded-xl btn-lagoon text-[12px]">
+                Simpan
+              </button>
+              <button
+                type="button"
+                id="discardDraftBtn"
+                class="px-3 py-2 rounded-xl bg-[#0A0F14] border border-[#7FB3B8]/20 text-[12px] text-[#7FB3B8] hover:text-red-300"
+              >
+                Buang
+              </button>
+            </div>
+            <button type="button" id="sendApplicationBtn" class="px-4 py-2.5 rounded-xl btn-amber text-[13px]">
+              Kirim Lamaran Sekarang
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+
+<%- include('partials/quick-capture-modal') %>
+
+<script>
+  window.__INITIAL_DRAFTS__ = <%- JSON.stringify(drafts) %>;
+  window.__INITIAL_PRESETS__ = <%- JSON.stringify(presets) %>;
+</script>
+<script src="/js/motion.js"></script>
+<script src="/js/dashboard.js"></script>
+</body>
+</html>
